@@ -257,8 +257,8 @@ p {
     color: #c8e6c8;
 }
 
-/* Home intro typing (first visit per session) */
-body.page-home .home-intro-reveal {
+/* Home intro: only hide lower sections while first-visit typing runs */
+html.home-intro-typing body.page-home .home-intro-reveal:not(.hero-connect--dock) {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -270,38 +270,55 @@ body.page-home .home-intro-reveal {
     transition-delay: var(--reveal-delay, 0s);
 }
 
-body.page-home .home-intro-reveal--visible {
+html.home-intro-typing body.page-home .home-intro-reveal.hero-connect--dock {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition:
+        opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0.9s;
+    transition-delay: var(--reveal-delay, 0s);
+}
+
+html.home-intro-typing body.page-home .home-intro-reveal--visible:not(.hero-connect--dock),
+body.page-home .home-intro-reveal.home-intro-reveal--visible:not(.hero-connect--dock) {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
     transform: translateY(0);
 }
 
-body.page-home.home-intro-skip-reveal .home-intro-reveal {
+html.home-intro-typing body.page-home .home-intro-reveal.hero-connect--dock.home-intro-reveal--visible,
+body.page-home .home-intro-reveal.hero-connect--dock.home-intro-reveal--visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+/* Navigating back to home: fade main content only; nav + socials stay put */
+html.home-intro-return body.page-home main {
+    animation: content-fade-in 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+html.home-intro-return nav,
+html.home-intro-return body.page-home .hero-connect--dock {
+    animation: none;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
     transition: none;
+}
+
+html.home-intro-return body.page-home .home-intro-reveal:not(.hero-connect--dock) {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
     transform: none;
 }
 
-/* Returning to home: fade in only the sections below the hero */
-html.home-intro-return body.page-home .home-intro-reveal {
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(1rem);
-    animation: home-reveal-fade 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-    animation-delay: var(--reveal-delay, 0s);
+body.page-home.home-intro-skip-reveal .home-intro-reveal:not(.hero-connect--dock) {
     transition: none;
-}
-
-@keyframes home-reveal-fade {
-    to {
-        opacity: 1;
-        visibility: visible;
-        transform: translateY(0);
-    }
-}
-
-html.home-intro-return body.page-home .home-intro-reveal--visible {
-    pointer-events: auto;
+    transform: none;
 }
 
 .typing-cursor {
@@ -321,20 +338,27 @@ html.home-intro-return body.page-home .home-intro-reveal--visible {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    body.page-home .home-intro-reveal {
+    html.home-intro-return body.page-home main {
+        animation: none;
+        opacity: 1;
+        transform: none;
+    }
+
+    html.home-intro-return nav,
+    html.home-intro-return body.page-home .hero-connect--dock {
+        animation: none;
+        opacity: 1;
+    }
+
+    html.home-intro-typing body.page-home .home-intro-reveal:not(.hero-connect--dock),
+    html.home-intro-typing body.page-home .home-intro-reveal--visible:not(.hero-connect--dock),
+    html.home-intro-typing body.page-home .home-intro-reveal.hero-connect--dock,
+    html.home-intro-typing body.page-home .home-intro-reveal.hero-connect--dock.home-intro-reveal--visible {
         opacity: 1;
         visibility: visible;
         pointer-events: auto;
         transform: none;
         transition: none;
-        animation: none;
-    }
-
-    html.home-intro-return body.page-home .home-intro-reveal {
-        animation: none;
-        opacity: 1;
-        visibility: visible;
-        transform: none;
     }
 
     .typing-cursor {
@@ -358,12 +382,14 @@ html.home-intro-return body.page-home .home-intro-reveal--visible {
 @media (min-width: 768px) {
     .hero-connect--dock {
         position: fixed;
-        left: clamp(0.75rem, 2vw, 1.75rem);
+        left: 1.25rem;
         top: 50%;
         transform: translateY(-50%);
         flex-direction: column;
         flex-wrap: nowrap;
         z-index: 50;
+        margin: 0;
+        padding: 0;
     }
 }
 
