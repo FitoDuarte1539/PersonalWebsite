@@ -4,9 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Your Name — Home</title>
+  <script>
+    try {
+      if (sessionStorage.getItem('homeIntroPlayed') === '1') {
+        document.documentElement.classList.add('home-intro-return');
+      } else {
+        document.documentElement.classList.add('home-intro-typing');
+      }
+    } catch (e) {}
+  </script>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="page-home">
 
 <nav>
   <div class="nav-name"><a href="index.html">FD</a></div>
@@ -17,7 +26,7 @@
   </ul>
 </nav>
 
-<div class="hero-connect hero-connect--dock" aria-label="Social links">
+<div class="hero-connect hero-connect--dock home-intro-reveal" aria-label="Social links">
   <a class="hero-connect-link" href="mailto:adalduar@ucsc.edu" aria-label="Email">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
   </a>
@@ -32,10 +41,11 @@
 <main>
   <div class="main-inner">
   <section id="home">
-    <h1>Hi, I'm <span class="accent">Fito Duarte</span></h1>
+    <h1><span id="hero-heading-typed">Hi, I'm </span><span class="accent" id="hero-name-typed">Fito Duarte</span></h1>
 
     <div class="terminal-box">
-      <pre class="terminal-box__body"><code><span class="terminal-box__code">char current_status[] = <span class="terminal-box__str">"Looking for work!\n"</span>;
+      <pre class="terminal-box__body terminal-box__typing" id="terminal-typing"><code></code></pre>
+      <pre class="terminal-box__body terminal-box__finished" id="terminal-finished"><code><span class="terminal-box__code">char current_status[] = <span class="terminal-box__str">"Looking for work!\n"</span>;
 char school[] = <span class="terminal-box__str">"UCSC"</span>;
 char major[] = <span class="terminal-box__str">"Computer Engineering"</span>;
 
@@ -44,7 +54,7 @@ char major[] = <span class="terminal-box__str">"Computer Engineering"</span>;
     </div>
   </section>
 
-  <section id="about">
+  <section id="about" class="home-intro-reveal">
     <h2>About</h2>
     <p>Grown up in Sacramento California,
       currently studying Computer Engineering at UCSC.
@@ -52,7 +62,7 @@ char major[] = <span class="terminal-box__str">"Computer Engineering"</span>;
     </p>
   </section>
 
-  <section id="projects-preview" aria-labelledby="projects-preview-heading">
+  <section id="projects-preview" class="home-intro-reveal" aria-labelledby="projects-preview-heading">
     <div class="home-projects">
       <h2 class="home-projects-heading" id="projects-preview-heading">Projects</h2>
       <p class="home-projects-lead">Each card has a short blurb; the projects page has the full boxes.</p>
@@ -80,7 +90,7 @@ char major[] = <span class="terminal-box__str">"Computer Engineering"</span>;
   </section>
   </div>
 
-  <footer class="site-footer">
+  <footer class="site-footer home-intro-reveal">
     <h2 class="site-footer-title">Connect</h2>
     <ul class="site-footer-list">
       <li><a href="mailto:adalduar@ucsc.edu">adalduar@ucsc.edu</a></li>
@@ -92,5 +102,6 @@ char major[] = <span class="terminal-box__str">"Computer Engineering"</span>;
 </main>
 
 <script src="script.js" defer></script>
+<script src="home-intro.js" defer></script>
 </body>
 </html>

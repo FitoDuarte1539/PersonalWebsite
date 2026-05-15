@@ -128,6 +128,36 @@ main {
     animation: content-fade-in 0.22s ease-out both;
 }
 
+/* Home: hero never uses the main page-enter fade (typing or static in HTML) */
+body.page-home .main-inner {
+    animation: none;
+    opacity: 1;
+    transform: none;
+}
+
+body.page-home #home {
+    opacity: 1;
+    transform: none;
+    animation: none;
+}
+
+/* First visit: type into the plain terminal layer; finished block stays hidden */
+html.home-intro-typing body.page-home .terminal-box__finished {
+    display: none;
+}
+
+html.home-intro-typing body.page-home .terminal-box__typing {
+    display: block;
+}
+
+body.page-home .terminal-box__typing {
+    display: none;
+}
+
+body.page-home .terminal-box__finished {
+    display: block;
+}
+
 main.main--exiting {
     opacity: 0;
     transform: translateY(8px);
@@ -225,6 +255,91 @@ p {
 
 .terminal-box__var {
     color: #c8e6c8;
+}
+
+/* Home intro typing (first visit per session) */
+body.page-home .home-intro-reveal {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(1.35rem);
+    transition:
+        opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+        visibility 0.9s;
+    transition-delay: var(--reveal-delay, 0s);
+}
+
+body.page-home .home-intro-reveal--visible {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+body.page-home.home-intro-skip-reveal .home-intro-reveal {
+    transition: none;
+    transform: none;
+}
+
+/* Returning to home: fade in only the sections below the hero */
+html.home-intro-return body.page-home .home-intro-reveal {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(1rem);
+    animation: home-reveal-fade 0.65s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--reveal-delay, 0s);
+    transition: none;
+}
+
+@keyframes home-reveal-fade {
+    to {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+}
+
+html.home-intro-return body.page-home .home-intro-reveal--visible {
+    pointer-events: auto;
+}
+
+.typing-cursor {
+    display: inline-block;
+    width: 0.5em;
+    height: 0.95em;
+    margin-left: 2px;
+    background: var(--accent);
+    vertical-align: text-bottom;
+    animation: typing-cursor-blink 0.9s step-end infinite;
+}
+
+@keyframes typing-cursor-blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.page-home .home-intro-reveal {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: auto;
+        transform: none;
+        transition: none;
+        animation: none;
+    }
+
+    html.home-intro-return body.page-home .home-intro-reveal {
+        animation: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+
+    .typing-cursor {
+        display: none;
+    }
 }
 
 .hero-connect--dock {
