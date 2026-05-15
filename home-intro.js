@@ -23,22 +23,9 @@
     'Dev fito = { "Fito Duarte", school, major, current_status };\n' +
     'dev_init(&fito);';
 
-  function revealRest(mode) {
-    document.documentElement.classList.remove('home-intro-typing');
-
-    const instant = mode === 'instant';
-    const stagger = mode === 'intro-complete' || mode === 'page-return';
-
-    if (instant) {
-      document.body.classList.add('home-intro-skip-reveal');
-    }
-
+  function revealAfterTyping() {
     revealEls.forEach(function (el, i) {
-      if (instant) {
-        el.style.removeProperty('--reveal-delay');
-      } else if (stagger) {
-        el.style.setProperty('--reveal-delay', i * 0.1 + 's');
-      }
+      el.style.setProperty('--reveal-delay', i * 0.13 + 's');
     });
 
     requestAnimationFrame(function () {
@@ -49,7 +36,20 @@
       });
     });
 
-    sessionStorage.setItem(STORAGE_KEY, '1');
+    var maxDelay = Math.max(0, revealEls.length - 1) * 130 + 950;
+    window.setTimeout(function () {
+      document.documentElement.classList.remove('home-intro-typing');
+      sessionStorage.setItem(STORAGE_KEY, '1');
+    }, maxDelay);
+  }
+
+  function showPageReturn() {
+    document.documentElement.classList.remove('home-intro-typing');
+
+    revealEls.forEach(function (el) {
+      el.style.removeProperty('--reveal-delay');
+      el.classList.add('home-intro-reveal--visible');
+    });
   }
 
   function clearHeroForTyping() {
@@ -89,22 +89,26 @@
 
   async function runIntro() {
     clearHeroForTyping();
-
-    await typeInto(headingEl, HEADING_TEXT, 42);
+    
+    await delay(50);
+    await typeInto(headingEl, HEADING_TEXT, 45);
     await delay(120);
     await typeInto(nameEl, NAME_TEXT, 42);
     await delay(200);
-    await typeInto(terminalTypingEl, TERMINAL_PLAIN, 22);
-    await delay(200);
-
-    document.documentElement.classList.remove('home-intro-typing');
-    await delay(400);
-    revealRest('intro-complete');
+    await typeInto(terminalTypingEl, TERMINAL_PLAIN, 16);
+    await delay(300);
+    revealAfterTyping();
   }
 
   if (skipIntro) {
-    revealRest(reducedMotion ? 'instant' : 'page-return');
-  } else {
-    runIntro();
+    if (reducedMotion) {
+      document.body.classList.add('home-intro-skip-reveal');
+      showPageReturn();
+    } else {
+      showPageReturn();
+    }
+    return;
   }
+
+  runIntro();
 })();
