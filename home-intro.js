@@ -20,8 +20,8 @@
     'char school[] = "UCSC";\n' +
     'char major[] = "Computer Engineering";\n' +
     '\n' +
-    'Dev fito = { "Fito Duarte", school, major, current_status };\n' +
-    'dev_init(&fito);';
+    'Dev *fito = dev_init("Fito Duarte", school, major, current_status);\n' +
+    'load(&fito);';
 
   function revealAfterTyping() {
     revealEls.forEach(function (el, i) {
